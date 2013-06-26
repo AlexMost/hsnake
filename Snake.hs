@@ -1,4 +1,6 @@
 import UI.HSCurses.Curses
+import System.Exit
+import Control.Monad
 import Primitives
 import Draw
 
@@ -8,7 +10,6 @@ main = do
   mainWin <- initScr
   initCurses
   echo False
-  a = Coord 5 5
-  draw a
+  let stage = Stage 10 10 (Coord 1 1)
+  draw stage
   refresh
-  return ()
