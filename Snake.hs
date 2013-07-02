@@ -14,10 +14,11 @@ main = do
   echo False
   wclear mainWin
   refresh
-  msg <- gameLoop $ GameState direction stage snake
+  msg <- gameLoop $ GameState direction stage snake 0 apple
   endWin
   putStrLn msg
   where
-    stage = Stage 20 10 (Coord 0 0)
+    stage = Stage 10 20 (Coord 0 0)
     direction = RIGHT
     snake = Snake [(Coord 2 2)]
+    apple = Coord 4 4
