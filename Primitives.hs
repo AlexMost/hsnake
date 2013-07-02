@@ -5,6 +5,7 @@ module Primitives(
 
 
 data Direction = LEFT | RIGHT | UP | DOWN
+    deriving (Show)
 
 data Coord = Coord {x :: Int, y :: Int} deriving (Show)
 

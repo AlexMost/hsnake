@@ -1,31 +1,49 @@
-module Game(gameStart) where 
+module Game(gameStart, gameLoop, GameState(..)) where 
+
 import Control.Applicative
 import System.IO
 import Control.Concurrent(threadDelay)
 import Primitives
+import UI.HSCurses.Curses
 
 
-data GameState = GameState {  direction :: Direction
-                            , stage :: Stage
-                            , snake :: Snake
-                       }
+data GameState = GameState  { direction :: Direction
+                            , stage     :: Stage
+                            , snake     :: Snake
+                            }
 
 
-keyListen :: Bool -> IO (Maybe Char)
-keyListen True = (Just) <$> getChar
-keyListen False = return Nothing
+keyListen :: IO (Maybe Char)
+keyListen = do
+    result <- hReady stdin
+    case result of
+        True -> (Just) <$> getChar
+        False -> return Nothing
 
 
-display :: Maybe Char -> IO ()
-display (Just x) = putStrLn $ "you have entered -- " ++ [x]
-display Nothing = return ()
+getNewDir :: Direction -> IO Direction
+getNewDir old = do
+    key <- keyListen
+    case key of
+        (Just 'w') -> return UP
+        (Just 's') -> return DOWN
+        (Just 'a') -> return LEFT
+        (Just 'd') -> return RIGHT
+        _ -> return old
 
 
-gameStart :: IO ()
-gameStart = do 
-    threadDelay 20000
-    result <- hReady stdin >>= keyListen
-    display result
-    gameStart
+gameStart :: GameState -> IO (Either String GameState)
+gameStart gs@GameState{direction=direction, stage=stage, snake=snake} = 
+    do 
+        threadDelay 200000
+        newDir <- getNewDir direction
+        putStrLn $ show newDir
+        case newDir of
+            DOWN -> return $ Left "Down is pressed"
+            _ -> return $ Right(GameState newDir stage snake)
+    
+
+gameLoop :: GameState -> IO String
+gameLoop gs = gameStart gs >>= either return gameLoop
 
     

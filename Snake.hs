@@ -10,8 +10,14 @@ import Game
 main :: IO ()
 main = do
   mainWin <- initScr
-  hSetBuffering stdin NoBuffering
   initCurses
   echo False
-  wclear stdScr
-  gameStart
+  wclear mainWin
+  refresh
+  msg <- gameLoop $ GameState direction stage snake
+  endWin
+  putStrLn msg
+  where
+    stage = Stage 20 10 (Coord 0 0)
+    direction = RIGHT
+    snake = Snake [(Coord 2 2)]
