@@ -19,4 +19,4 @@ main = do
     stage = Stage 20 40 (Coord 0 0)
     direction = RIGHT
     snake = Snake [(Coord 2 2)]
-    apple = Coord 4 4
+    apple = Coord 4 5
