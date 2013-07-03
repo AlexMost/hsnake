@@ -35,8 +35,12 @@ getNewGameState gs@GameState{snake=snake, stage=stage, apple=apple, score=score}
 
 
 getGameStatus :: GameState -> Direction -> GameStatus
-getGameStatus gs@GameState{direction=dir, snake=snake, stage=stage} newDir = 
-    Continue
+getGameStatus gs@GameState{direction=dir, snake=snake, stage=stage} newDir
+    | nextHeadPosition `elem` stBorders       = Loose
+    | otherwise                               = Continue
+    where 
+        nextHeadPosition = head $ cords(snakeMove newDir snake)
+        stBorders = stageBorders stage
 
 
 gameStart :: GameState -> IO (Either String GameState)

@@ -1,7 +1,7 @@
 module Primitives(
     Coord(..), up, down, left, right,
     Stage(..), Direction(..), Snake(..), GameState(..), Controls(..),
-    GameStatus(..), snakeMove
+    GameStatus(..), snakeMove, stageBorders
     ) where
 
 
@@ -13,7 +13,7 @@ data Controls = QUIT | RESTART | STOP
     deriving (Show)
 
 
-data Coord = Coord {x :: Int, y :: Int} deriving (Show)
+data Coord = Coord {x :: Int, y :: Int} deriving (Show, Eq)
 
 
 data Stage = Stage {  width :: Int
@@ -47,6 +47,16 @@ snakeMove direction oldS@Snake{cords=cords} =
                 DOWN -> down
                 LEFT -> left
                 RIGHT -> right
+
+
+stageBorders :: Stage -> [Coord]
+stageBorders st@Stage{width=w, height=h, offset=o} =
+    foldl (++) [] [head_line, bottom_line, left_line, right_line]
+    where
+        head_line = [Coord i 0 | i <- [0..w]]
+        bottom_line = [Coord i h | i <- [0..w]]
+        left_line = [Coord 0 j | j <- [0..h]]
+        right_line = [Coord w j | j <- [0..h]]
 
 
 up :: Coord -> Coord

@@ -28,13 +28,7 @@ instance Draw Coord where
 
 
 instance Draw Stage where
-    draw Stage {width = w, height = h, offset = o} = do
-        mapM_ writePoints [head_line, bottom_line, left_line, right_line]
-        where
-            head_line = [Coord i 0 | i <- [0..w]]
-            bottom_line = [Coord i h | i <- [0..w]]
-            left_line = [Coord 0 j | j <- [0..h]]
-            right_line = [Coord w j | j <- [0..h]]
+    draw stage = writePoints (stageBorders stage)
 
 
 instance Draw GameState where
