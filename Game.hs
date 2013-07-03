@@ -1,4 +1,4 @@
-module Game(gameStart, gameLoop) where 
+module Game(gameStart, gameLoop) where
 
 import Control.Applicative
 import System.IO
@@ -11,9 +11,10 @@ import Draw
 keyListen :: IO (Maybe Char)
 keyListen = do
     result <- hReady stdin
-    case result of
-        True -> (Just) <$> getChar
-        False -> return Nothing
+    if result then
+        (Just) <$> getChar
+    else
+        return Nothing
 
 
 getNewDir :: Direction -> Maybe Char -> Direction
@@ -37,8 +38,8 @@ getGameStatus gs newDir = Continue
 
 
 gameStart :: GameState -> IO (Either String GameState)
-gameStart gs@GameState{direction=direction, score=score} = 
-    do 
+gameStart gs@GameState{direction=direction, score=score} =
+    do
         draw gs
         refresh
         threadDelay 200000
@@ -51,6 +52,6 @@ gameStart gs@GameState{direction=direction, score=score} =
             Quit -> return $ Left "Buy - buy"
             Win -> return $ Left "Great job dude !!!"
 
-    
+
 gameLoop :: GameState -> IO String
-gameLoop gs = gameStart gs >>= either return gameLoop  
+gameLoop gs = gameStart gs >>= either return gameLoop
