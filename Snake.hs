@@ -9,11 +9,9 @@ import Game
 
 main :: IO ()
 main = do
-  mainWin <- initScr
+  hSetBuffering stdin NoBuffering
   initCurses
   echo False
-  wclear mainWin
-  refresh
   msg <- gameLoop $ GameState direction stage snake 0 apple
   endWin
   putStrLn msg

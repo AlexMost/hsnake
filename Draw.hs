@@ -24,7 +24,7 @@ class Draw a where
 
 
 instance Draw Coord where
-    draw co = write "#" co
+    draw co = write "*" co
 
 
 instance Draw Stage where
@@ -38,7 +38,8 @@ instance Draw Stage where
 
 
 instance Draw GameState where
-    draw GameState{stage=stage, snake=snake} = draw stage >> draw snake
+    draw GameState{stage=stage, snake=snake, apple=apple} = do
+        draw stage >> draw snake >> draw apple
 
 
 instance Draw Snake where

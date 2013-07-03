@@ -1,7 +1,7 @@
 module Primitives(
     Coord(..), up, down, left, right,
     Stage(..), Direction(..), Snake(..), GameState(..), Controls(..),
-    GameStatus(..)
+    GameStatus(..), snakeMove
     ) where
 
 
@@ -37,8 +37,16 @@ data GameState = GameState  { direction :: Direction
 data GameStatus = Continue | Loose | Win | Quit
 
 
-snakeHead :: Snake -> Coord
-snakeHead (Snake (h:_)) = h
+snakeMove :: Direction -> Snake -> Snake
+snakeMove direction oldS@Snake{cords=cords} =
+    Snake (newCord: init cords)
+        where 
+            newCord = action $ head cords
+            action = case direction of
+                UP -> up
+                DOWN -> down
+                LEFT -> left
+                RIGHT -> right
 
 
 up :: Coord -> Coord

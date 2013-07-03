@@ -11,8 +11,9 @@ import Draw
 keyListen :: IO (Maybe Char)
 keyListen = do
     result <- hReady stdin
-    if result then (Just) <$> getChar
-    else return Nothing
+    if result 
+        then (Just) <$> getChar 
+        else return Nothing
 
 
 getNewDir :: Direction -> Maybe Char -> Direction
@@ -28,16 +29,20 @@ getNewDir old Nothing = old
 
 
 getNewGameState :: GameState -> Direction -> GameState
-getNewGameState gs dir = gs
+getNewGameState gs@GameState{snake=snake, stage=stage, apple=apple, score=score} dir =
+    GameState dir stage newSnake score apple
+        where newSnake = snakeMove dir snake
 
 
 getGameStatus :: GameState -> Direction -> GameStatus
-getGameStatus gs newDir = Continue
+getGameStatus gs@GameState{direction=dir, snake=snake, stage=stage} newDir = 
+    Continue
 
 
 gameStart :: GameState -> IO (Either String GameState)
-gameStart gs@GameState{direction=direction, score=score} =
+gameStart gs@GameState{direction=direction, score=score, snake=snake, apple=apple} =
     do
+        wclear stdScr
         draw gs
         refresh
         threadDelay 200000
