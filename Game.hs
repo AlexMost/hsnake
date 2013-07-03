@@ -11,10 +11,8 @@ import Draw
 keyListen :: IO (Maybe Char)
 keyListen = do
     result <- hReady stdin
-    if result then
-        (Just) <$> getChar
-    else
-        return Nothing
+    if result then (Just) <$> getChar
+    else return Nothing
 
 
 getNewDir :: Direction -> Maybe Char -> Direction
