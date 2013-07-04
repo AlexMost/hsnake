@@ -32,8 +32,11 @@ instance Draw Stage where
 
 
 instance Draw GameState where
-    draw GameState{stage=stage, snake=snake, apple=apple} = do
+    draw GameState{stage=stage, snake=snake, apple=apple, score=score} = do
         draw stage >> draw snake >> draw apple
+        write ("Score - " ++ show score) score_xy
+        where
+            score_xy = Coord 0 (height stage + 2)
 
 
 instance Draw Snake where
