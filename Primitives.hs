@@ -29,7 +29,8 @@ data GameState = GameState  { direction :: Direction
                             }
 
 
-data GameStatus = Continue | Loose | Win | Quit
+data GameStatus = Continue | Loose | Win | Quit | HitApple
+    deriving(Show, Eq)
 
 
 snakeMove :: Direction -> Snake -> Snake
@@ -52,3 +53,4 @@ stageBorders st@Stage{width=w, height=h, offset=o} =
         bottom_line = [Coord i h | i <- [0..w]]
         left_line = [Coord 0 j | j <- [0..h]]
         right_line = [Coord w j | j <- [0..h]]
+

@@ -2,6 +2,7 @@ module Game(gameStart, gameLoop) where
 
 import Control.Applicative
 import System.IO
+import System.Random
 import UI.HSCurses.Curses
 import Control.Concurrent(threadDelay)
 import Primitives
@@ -28,19 +29,36 @@ getNewDir _ (Just 'd') = RIGHT
 getNewDir old Nothing = old
 
 
-getNewGameState :: GameState -> Direction -> GameState
-getNewGameState gs@GameState{snake=snake, stage=stage, apple=apple, score=score} dir =
-    GameState dir stage newSnake score apple
-        where newSnake = snakeMove dir snake
+getNewGameState :: GameState -> GameStatus -> Direction -> Coord -> GameState
+getNewGameState 
+    gs@GameState{snake=snake, stage=stage, apple=apple, score=score} 
+    status 
+    dir
+    newApple
+    | status == Continue = GameState dir stage newSnake score apple
+    | status == HitApple = GameState dir stage biggerSnake (score+1) newApple
+    where newSnake = snakeMove dir snake
+          biggerSnake = Snake (apple:cords snake)
 
 
 getGameStatus :: GameState -> Direction -> GameStatus
-getGameStatus gs@GameState{direction=dir, snake=snake, stage=stage} newDir
+getGameStatus 
+    gs@GameState{direction=dir, snake=snake, stage=stage, apple=apple} 
+    newDir
     | nextHeadPosition `elem` stBorders       = Loose
+    | nextHeadPosition == apple               = HitApple
     | otherwise                               = Continue
     where 
         nextHeadPosition = head $ cords(snakeMove newDir snake)
         stBorders = stageBorders stage
+
+
+getApplePosition :: Stage -> IO Coord
+getApplePosition st@Stage{width=w, height=h} =
+    do
+        x <- randomRIO (1, w-1)
+        y <- randomRIO (1, h-1)
+        return $ Coord x y
 
 
 gameStart :: GameState -> IO (Either String GameState)
@@ -51,13 +69,13 @@ gameStart gs@GameState{direction=direction, score=score, snake=snake, apple=appl
         refresh
         threadDelay 200000
         key <- keyListen
+        newApple <- getApplePosition $ stage gs
         let newDir = getNewDir direction key
         let gameStatus = getGameStatus gs newDir
         case gameStatus of
-            Continue -> return $ Right(getNewGameState gs newDir)
+            Continue -> return $ Right(getNewGameState gs Continue newDir newApple)
+            HitApple -> return $ Right(getNewGameState gs HitApple newDir newApple)
             Loose -> return $ Left("You looose your score is " ++ show score)
-            Quit -> return $ Left "Buy - buy"
-            Win -> return $ Left "Great job dude !!!"
 
 
 gameLoop :: GameState -> IO String
