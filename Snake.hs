@@ -11,6 +11,7 @@ main :: IO ()
 main = do
   hSetBuffering stdin NoBuffering
   initCurses
+  _ <- leaveOk True
   echo False
   msg <- gameLoop $ GameState direction stage snake 0 apple
   endWin
