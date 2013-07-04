@@ -1,15 +1,10 @@
 module Primitives(
-    Coord(..), up, down, left, right,
-    Stage(..), Direction(..), Snake(..), GameState(..), Controls(..),
+    Coord(..), Stage(..), Direction(..), Snake(..), GameState(..),
     GameStatus(..), snakeMove, stageBorders
     ) where
 
 
 data Direction = LEFT | RIGHT | UP | DOWN
-    deriving (Show)
-
-
-data Controls = QUIT | RESTART | STOP
     deriving (Show)
 
 
@@ -43,10 +38,10 @@ snakeMove direction oldS@Snake{cords=cords} =
         where 
             newCord = action $ head cords
             action = case direction of
-                UP -> up
-                DOWN -> down
-                LEFT -> left
-                RIGHT -> right
+                UP -> \Coord{x=x, y=y} -> Coord (x - 1) y
+                DOWN -> \Coord{x=x, y=y} -> Coord (x + 1) y
+                LEFT -> \Coord{x=x, y=y} -> Coord x (y -1)
+                RIGHT -> \Coord{x=x, y=y} -> Coord x (y + 1)
 
 
 stageBorders :: Stage -> [Coord]
@@ -57,19 +52,3 @@ stageBorders st@Stage{width=w, height=h, offset=o} =
         bottom_line = [Coord i h | i <- [0..w]]
         left_line = [Coord 0 j | j <- [0..h]]
         right_line = [Coord w j | j <- [0..h]]
-
-
-up :: Coord -> Coord
-up (Coord x y) = Coord (x -1) y
-
-
-down :: Coord -> Coord
-down (Coord x y) = Coord (x + 1) y
-
-
-left :: Coord -> Coord
-left (Coord x y) = Coord x (y -1)
-
-
-right :: Coord -> Coord
-right (Coord x y) = Coord x (y + 1)
