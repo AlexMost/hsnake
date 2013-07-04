@@ -46,6 +46,7 @@ getGameStatus
     gs@GameState{direction=dir, snake=snake, stage=stage, apple=apple} 
     newDir
     | nextHeadPosition `elem` stBorders       = Loose
+    | nextHeadPosition `elem` cords(snake)    = Loose
     | nextHeadPosition == apple               = HitApple
     | otherwise                               = Continue
     where 
