@@ -27,6 +27,7 @@ getNewDir _ (Just 'a') = LEFT
 getNewDir LEFT (Just 'd') = LEFT
 getNewDir _ (Just 'd') = RIGHT
 getNewDir old Nothing = old
+getNewDir old _ = old
 
 
 getNewGameState :: GameState -> GameStatus -> Direction -> Coord -> GameState
