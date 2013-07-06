@@ -18,7 +18,7 @@ data Stage = Stage {  width :: Int
     deriving(Show)
 
 
-data Snake = Snake {cords :: [Coord]} deriving(Show)
+newtype Snake = Snake {cords :: [Coord]} deriving(Show, Eq)
 
 
 data GameState = GameState  { direction :: Direction

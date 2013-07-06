@@ -59,7 +59,7 @@ getApplePosition :: Stage -> IO Coord
 getApplePosition st@Stage{width=w, height=h} = 
     Coord <$> randomRIO (1, w-1) <*> randomRIO (1, h-1)
 
-
+    
 gameStart :: GameState -> IO (Either String GameState)
 gameStart gs@GameState{direction=direction, score=score, snake=snake, apple=apple} =
     do
